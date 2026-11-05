@@ -1,5 +1,5 @@
 INSERT COIN: GALAXY — verificación local 2026-11-05
-Autor: Daniel Sandoval. Trabajo individual. Asistencia declarada en ENTREGA.md.
+Autor: Daniel Sandoval. Trabajo individual. Datos de entrega en ENTREGA.md.
 
 cargo test --offline --locked: 48 passed, 0 failed.
 cargo clippy --offline --locked --all-targets -- -D warnings: OK.

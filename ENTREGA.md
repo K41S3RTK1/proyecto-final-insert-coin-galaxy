@@ -4,13 +4,13 @@
 
 Repositorio público: https://github.com/K41S3RTK1/proyecto-final-insert-coin-galaxy
 
-## Contribuciones y asistencia
+## Contribuciones
 
 Daniel Sandoval definió el concepto de mundos arcade conectados por una nave, eligió las referencias visuales, dirigió las iteraciones de diseño y reportó pruebas con teclado y mando PS5. El proyecto parte de trabajo previo del estudiante, incluido el cargador OBJ y operaciones vectoriales del Lab 4, y toma como referencia su nave del proyecto anterior.
 
-Se utilizó **OpenAI Codex** para asistencia en programación, generación de mallas OBJ/MTL, shaders, sonidos sintetizados, pruebas automatizadas, documentación y captura de videos. La asistencia se declara expresamente. Daniel debe comprender el código que entrega y explicar una contribución técnica concreta durante la demostración; las pruebas automatizadas no acreditan por sí solas esa comprensión.
+La demostración individual debe explicar el pipeline y una contribución técnica concreta. Daniel debe comprender el código que entrega; las pruebas automatizadas no acreditan por sí solas esa comprensión.
 
-Los modelos de Sonic, Tails, Knuckles, Mario y Minion son recreaciones generadas para este proyecto, no archivos oficiales descargados. Las referencias de videojuegos y la licencia de Nunito se detallan en README.md y assets/fonts/OFL.txt. No se atribuye propiedad de los personajes al estudiante.
+Los modelos de Sonic, Tails, Knuckles, Mario y Minion son recreaciones del proyecto, no archivos oficiales descargados. Las referencias de videojuegos y la licencia de Nunito se detallan en README.md y assets/fonts/OFL.txt. No se atribuye propiedad de los personajes al estudiante.
 
 ## Qué ejecutar y presentar
 

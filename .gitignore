@@ -12,3 +12,5 @@ __pycache__/
 *.pyc
 .env
 .env.*
+
+/ENTREGA-PRIVADA.md

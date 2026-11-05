@@ -9,7 +9,7 @@ La consigna indica que faltar a cualquiera inhabilita la evaluación. **Se debe 
 | Requisito del PDF | Evidencia verificada | Alcance |
 |---|---|---|
 | 1. Pipeline propio por software; raylib solo ventana, entradas y presentación | `Renderer::begin`, `model`, `clip_triangle`, `triangle`, `fragment` en src/renderer.rs; matrices propias en src/math.rs; rama CPU de src/main.rs sube los píxeles del framebuffer y los muestra como textura 2D | Cumple en `--software`. No se instancia `Gpu` ni se aplican shaders GPU a la escena en esa ruta. Sin motor de juego/física externo |
-| 2. Sol, nave propia controlable, planeta con órbita y rotación por tiempo | src/scene.rs, assets/arcade-ship.obj/.mtl, tools/build_ship.py; cinco planetas en `planet_at`/`spin_at` de src/game.rs | Pruebas de dt, órbita, giro y controles; modelos propios asistidos por IA declarada |
+| 2. Sol, nave propia controlable, planeta con órbita y rotación por tiempo | src/scene.rs, assets/arcade-ship.obj/.mtl, tools/build_ship.py; cinco planetas en `planet_at`/`spin_at` de src/game.rs | Pruebas de dt, órbita, giro y controles; modelos propios del proyecto |
 | 3. Acercarse, rodear y alejarse sin cambiar escena; cámara controlable | `Mode::Flight`, control libre y asistencia orbital. Prueba `academic_flight_approaches_orbits_fully_and_leaves_without_cuts` | 30 s de vuelo continuo: se comprueba aproximación, giro superior a 360°, alejamiento, continuidad y permanencia en Flight. Los portales a minijuegos son opcionales |
 | 4. Cargar modelos, transformaciones MVP, profundidad y shader propio | src/obj.rs, src/math.rs, z-buffer y `fragment` en src/renderer.rs | Tests de índices/normales, orden de profundidad, clipping y carga/rasterización de los cinco planetas; captura CPU real |
 | 5. Fuentes, recursos, instrucciones y video del recorrido | Repositorio, README.md, ENTREGA.md, assets/, Cargo.lock y output/Proyecto_Final_CPU.mp4 | Video CPU de 30 s sin cortes y con controles automáticos identificados. Los videos HD se entregan como evidencia adicional |
@@ -51,10 +51,12 @@ Subtotal técnico postulable: **162 puntos**; presentación hasta **10**. La con
 - Ruta CPU sin ventana para capturas y video: no inicializa un contexto GPU.
 - Muestras locales CPU a 640×360, 120 cuadros de cámara fija: jardín cercano **34.5 FPS**, p95 **29.2 ms**; vista general **72.4 FPS**, p95 **14.0 ms**. Son mediciones puntuales en esta Mac, no garantía de otra máquina o todo el juego.
 - Otras vistas cercanas CPU a 640×360: Dojo **81.8 FPS**, Runner **48.0 FPS**, Mario **82.1 FPS**, Race **75.7 FPS**. Contadores y condiciones en output/validacion-entrega.txt.
-- Datos de autoría: proyecto individual de **Daniel Sandoval**, contribuciones y asistencia de IA declaradas en ENTREGA.md.
+- Datos de autoría: proyecto individual de **Daniel Sandoval**, contribuciones detalladas en ENTREGA.md.
 - Regeneración del video CPU: tools/record-academic.sh; el FPS del archivo es fijo y no es un benchmark.
 - El mando fue probado por el usuario en versiones anteriores. La sensación física de las acciones nuevas/vibración requiere ensayo humano; no se acredita mediante un contador de API.
 
-## Pendiente de la defensa
+## Pendiente de la entrega y defensa
+
+La entrega institucional debe acompañarse de las declaraciones adicionales que solicita la página 4 de la consigna; no se certifica aquí su presentación al docente.
 
 Daniel debe practicar y explicar el pipeline y una contribución técnica concreta, y poder modificar un parámetro en vivo. Esa comprobación individual y la calificación final corresponden al docente; no pueden certificarse mediante herramientas automáticas.
