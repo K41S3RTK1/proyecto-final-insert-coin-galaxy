@@ -23,3 +23,7 @@ El FPS de archivo no representa el rendimiento interactivo.
 
 El modo GPU HD es adicional. Usar Evaluar-CPU.command para la consigna escrita.
 No se certifican nota, comprensión individual ni sensación física del DualSense.
+
+Copia limpia desde Git: compilación release desde cero en target separado;
+48/48 pruebas en release, ejecutable compilado y captura CPU del sistema generada.
+Solo fuentes/assets versionados; dependencias disponibles en la caché local de Cargo.

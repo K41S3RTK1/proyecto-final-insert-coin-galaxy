@@ -47,6 +47,7 @@ Subtotal técnico postulable: **162 puntos**; presentación hasta **10**. La con
 
 - 48 pruebas automatizadas y Clippy sin advertencias.
 - Video CPU verificado con FFprobe: H.264, 800×450, 900 cuadros a 30 fps, 30 s y AAC estéreo; decodificación completa sin errores y revisión de acercamiento, órbita y alejamiento.
+- Copia limpia clonada desde Git, con directorio de compilación nuevo: `cargo test --release --locked --offline` aprobó 48/48; build release y exportación de la vista general CPU completados usando solo código y assets versionados. Las dependencias se tomaron de la caché Cargo local.
 - Ruta CPU sin ventana para capturas y video: no inicializa un contexto GPU.
 - Muestras locales CPU a 640×360, 120 cuadros de cámara fija: jardín cercano **34.5 FPS**, p95 **29.2 ms**; vista general **72.4 FPS**, p95 **14.0 ms**. Son mediciones puntuales en esta Mac, no garantía de otra máquina o todo el juego.
 - Otras vistas cercanas CPU a 640×360: Dojo **81.8 FPS**, Runner **48.0 FPS**, Mario **82.1 FPS**, Race **75.7 FPS**. Contadores y condiciones en output/validacion-entrega.txt.
