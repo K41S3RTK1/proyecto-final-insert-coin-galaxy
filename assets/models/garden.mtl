@@ -1,0 +1,131 @@
+newmtl surface_garden
+Kd 0.2400 0.5500 0.3100
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl surface_runner
+Kd 0.9800 0.7300 0.1700
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl surface_mario
+Kd 0.2400 0.5500 0.3100
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_grass
+Kd 0.3200 0.9100 0.0600
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_moss
+Kd 0.6400 1.0000 0.1200
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_earth
+Kd 0.4800 0.3000 0.1900
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_sand
+Kd 0.8300 0.6800 0.4200
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_rock
+Kd 0.3600 0.3900 0.4300
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_ocean
+Kd 0.0200 0.7200 0.9100
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_cream
+Kd 0.9400 0.8500 0.6300
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_red
+Kd 0.7600 0.2000 0.1500
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_bark
+Kd 0.5400 0.2300 0.0600
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_leaf
+Kd 0.1200 0.6600 0.0800
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_leaf_light
+Kd 0.5500 0.9600 0.0600
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_white
+Kd 0.9600 0.9500 0.8500
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_blue
+Kd 0.1300 0.3500 0.6300
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_yellow
+Kd 0.9800 0.7300 0.1700
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_black
+Kd 0.0700 0.0900 0.1300
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl city_wall
+Kd 0.2100 0.1900 0.3400
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl terrain_rock
+Kd 0.4800 0.4000 0.3000
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_purple
+Kd 0.2100 0.1900 0.3400
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_roof
+Kd 0.5000 0.1400 0.2300
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_pipe
+Kd 0.1500 0.6500 0.2400
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_brick
+Kd 0.6600 0.3200 0.1700
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_grey
+Kd 0.4200 0.4900 0.5400
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl metal
+Kd 0.5500 0.6400 0.6800
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl checker_cliff
+Kd 0.6800 0.3000 0.0800
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl water_blue
+Kd 0.0200 0.7200 0.9100
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl paint_gold
+Kd 1.0000 0.7000 0.0300
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl glow_cyan
+Kd 0.2900 0.8900 0.9400
+Ks 0.25 0.25 0.25
+Ns 48
+Ke 0.2900 0.8900 0.9400
+newmtl glow_pink
+Kd 0.9900 0.3000 0.5500
+Ks 0.25 0.25 0.25
+Ns 48
+Ke 0.9900 0.3000 0.5500
+newmtl glow_gold
+Kd 1.0000 0.7900 0.2400
+Ks 0.25 0.25 0.25
+Ns 48
+Ke 1.0000 0.7900 0.2400

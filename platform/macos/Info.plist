@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleExecutable</key><string>arcade-galaxy</string>
+<key>CFBundleIdentifier</key><string>edu.graficas.arcadegalaxy</string>
+<key>CFBundleName</key><string>Insert Coin Galaxy</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleVersion</key><string>0.8.0</string>
+<key>NSHighResolutionCapable</key><true/>
+</dict></plist>

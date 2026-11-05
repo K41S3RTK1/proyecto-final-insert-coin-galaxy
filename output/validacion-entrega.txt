@@ -1,0 +1,25 @@
+INSERT COIN: GALAXY — verificación local 2026-11-05
+Autor: Daniel Sandoval. Trabajo individual. Asistencia declarada en ENTREGA.md.
+
+cargo test --offline --locked: 48 passed, 0 failed.
+cargo clippy --offline --locked --all-targets -- -D warnings: OK.
+cargo fmt --check: OK.
+
+CPU --benchmark --quality fast, 640x360, 120 cuadros de vista fija:
+close:          34.5 FPS, p95 29.2 ms, 114441 enviados, 52410 rasterizados, 120 descartes.
+system:         72.4 FPS, p95 14.0 ms, 101849 enviados, 36069 rasterizados, 60 descartes.
+dojo-planet:    81.8 FPS, p95 13.5 ms, 53840 enviados, 23955 rasterizados, 149 descartes.
+runner-planet:  48.0 FPS, p95 21.0 ms, 133713 enviados, 56019 rasterizados, 60 descartes.
+mario-planet:   82.1 FPS, p95 12.4 ms, 56709 enviados, 25004 rasterizados, 149 descartes.
+race-planet:    75.7 FPS, p95 13.4 ms, 73320 enviados, 27015 rasterizados, 148 descartes.
+Muestras locales en esta Mac; no garantizan otra máquina ni toda la partida.
+
+Proyecto_Final_CPU.mp4: H.264, 800x450, 30 fps, 900 cuadros, 30 s; AAC estéreo.
+FFmpeg decodificó el video completo sin errores.
+Se inspeccionaron capturas en acercamiento, órbita y alejamiento.
+La prueba academic_flight_approaches_orbits_fully_and_leaves_without_cuts verifica
+continuidad, más de 360 grados, modo Flight constante y progreso intacto en memoria.
+El FPS de archivo no representa el rendimiento interactivo.
+
+El modo GPU HD es adicional. Usar Evaluar-CPU.command para la consigna escrita.
+No se certifican nota, comprensión individual ni sensación física del DualSense.

@@ -1,0 +1,56 @@
+newmtl hero_blue
+Kd 0.0250 0.1900 0.9100
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_orange
+Kd 1.0000 0.6000 0.0250
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_red
+Kd 0.8600 0.0250 0.0450
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_skin
+Kd 1.0000 0.7200 0.4000
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_white
+Kd 0.9800 0.9900 1.0000
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_black
+Kd 0.0180 0.0250 0.0450
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_green
+Kd 0.1200 0.6800 0.1600
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_purple
+Kd 0.4700 0.1200 0.6600
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_iris_blue
+Kd 0.0200 0.5700 0.8900
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_gold
+Kd 1.0000 0.7200 0.0400
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_sole
+Kd 0.6700 0.7400 0.8100
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_darkred
+Kd 0.4800 0.0150 0.0250
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_ear
+Kd 1.0000 0.7900 0.5800
+Ks 0.25 0.25 0.25
+Ns 48
+newmtl hero_brown
+Kd 0.3100 0.1200 0.0400
+Ks 0.25 0.25 0.25
+Ns 48

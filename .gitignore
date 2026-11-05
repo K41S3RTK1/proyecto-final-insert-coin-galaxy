@@ -1,0 +1,14 @@
+/target/
+/output/*
+!/output/Proyecto_Final_Green_Hill_Galaxy.mp4
+!/output/Sonic_Grand_Prix.mp4
+!/output/Proyecto_Final_CPU.mp4
+!/output/race-v8.png
+!/output/race-planet-v8.png
+!/output/validacion-entrega.txt
+.DS_Store
+/saves/
+__pycache__/
+*.pyc
+.env
+.env.*
