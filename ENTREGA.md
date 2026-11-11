@@ -1,6 +1,6 @@
 # Entrega individual — INSERT COIN: GALAXY
 
-**Integrante:** Daniel Sandoval. **Modalidad:** individual. **Fecha de revisión:** 2026-11-05.
+**Integrante:** Daniel Sandoval. **Modalidad:** individual. **Fecha de revisión:** 2026-11-10.
 
 Repositorio público: https://github.com/K41S3RTK1/proyecto-final-insert-coin-galaxy
 
@@ -18,13 +18,14 @@ Los modelos de Sonic, Tails, Knuckles, Mario y Minion son recreaciones del proye
 2. Clonar el repositorio y entrar a la carpeta. `cargo run --release --locked -- --software --quality fast` ejecuta la modalidad académica; en macOS también `Evaluar-CPU.command`.
 3. Enter despega, WASD mueve, flechas orientan, R/F cambian altura. Cerca del planeta, Tab activa asistencia orbital, A/D rodean y W/S cambian radio. Tab vuelve al vuelo libre. No usar Home en el tramo continuo de demostración.
 4. Mostrar F1 (contadores), F2 (culling) y F3 (LOD) desde la misma cámara; explicar cómo cambia el trabajo del rasterizador.
-5. Para la edición visual adicional, `Jugar.command` o `cargo run --release --locked`. Su modo GPU no es evidencia del requisito CPU.
+5. Comparar normal mapping con F6 y gravedad en vuelo libre con G; explicar textura/TBN, aceleración y semilla Perlin según OPCIONALES.md.
+6. Para la edición visual adicional, `Jugar.command` o `cargo run --release --locked`. Su modo GPU no es evidencia del requisito CPU.
 
 ## Archivos de entrega
 
 - Código: src/, shaders/, platform/, Cargo.toml, Cargo.lock y build.rs.
 - Recursos: assets/, incluidos todos los OBJ/MTL, audio y fuente tipográfica.
-- Generadores reproducibles: tools/build_ship.py, build_planets.py, build_racers.py y asset_mesh.py.
+- Generadores reproducibles: tools/build_ship.py, build_planets.py, build_racers.py, asset_mesh.py, noise3d.py y build_normal_map.py.
 - Video principal para la consigna: output/Proyecto_Final_CPU.mp4, 30 segundos, rasterización CPU, vuelo continuo con una vuelta completa. Controles automatizados identificados en pantalla; progreso aislado, sin editar partidas guardadas.
 - Videos adicionales HD: output/Proyecto_Final_Green_Hill_Galaxy.mp4 y output/Sonic_Grand_Prix.mp4.
 - Solicitud de evaluación y límites: RUBRICA.md. Controles: README.md y RACE.md.

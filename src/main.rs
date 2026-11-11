@@ -5,9 +5,11 @@ mod duel;
 mod feedback;
 mod game;
 mod gpu;
+mod gravity;
 mod haptics;
 mod input;
 mod math;
+mod normal_map;
 mod obj;
 mod platform_scene;
 mod platformer;
@@ -42,6 +44,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut record_start = 0;
     let mut gpu_export = false;
     let mut software = false;
+    let mut normal_mapping = true;
+    let mut gravity_enabled = true;
     let mut view = "flight".to_string();
     let mut frames = None;
     let mut benchmark = false;
@@ -58,6 +62,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             "--record" => recording = Some(PathBuf::from(args.next().ok_or("Falta ruta MP4")?)),
             "--software" => software = true,
+            "--no-normal-map" => normal_mapping = false,
+            "--no-gravity" => gravity_enabled = false,
             "--gpu-render" => {
                 gpu_export = true;
                 export = Some(PathBuf::from(args.next().ok_or("Falta ruta PNG")?));
@@ -79,7 +85,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             "--benchmark" => benchmark = true,
             "--help" | "-h" => {
                 println!(
-                    "INSERT COIN: GALAXY / CINCO MUNDOS\ncargo run --release --locked --offline\n--render salida.png --scene flight|mario|mario-mid|mario-end|mario-planet|runner|runner-jump|runner-slide|runner-planet|battle|garden-phase2|dojo|dojo-counter|dojo-planet|portal|system|title|victory|close|orbit|ship\n--record salida.mp4: recorrido automatico 176 s, sin audio; --frames limita duracion\n--scene race|race-start|race-loop|race-tails|race-knuckles|sonic-model|tails-model|knuckles-model|race-planet\n--gpu-render salida.png: captura GPU HD\n--software: rasterizador CPU original; con --record exporta vuelo continuo de 30 s\n--quality balanced|high|fast\n--benchmark: 120 cuadros de vista fija sin ventana\n--frames N: prueba de ventana\n--save ruta: archivo de progreso alternativo\nH: controles, N/R3: destino, M/Share: audio, F4/cruceta abajo: calidad, F5/cruceta arriba: vibracion"
+                    "INSERT COIN: GALAXY / CINCO MUNDOS\ncargo run --release --locked --offline\n--render salida.png --scene flight|mario|mario-mid|mario-end|mario-planet|runner|runner-jump|runner-slide|runner-planet|battle|garden-phase2|dojo|dojo-counter|dojo-planet|portal|system|title|victory|close|orbit|ship\n--record salida.mp4: recorrido automatico 176 s, sin audio; --frames limita duracion\n--scene race|race-start|race-loop|race-tails|race-knuckles|sonic-model|tails-model|knuckles-model|race-planet\n--gpu-render salida.png: captura GPU HD\n--software: rasterizador CPU original; con --record exporta vuelo continuo de 30 s\n--quality balanced|high|fast\n--no-normal-map / --no-gravity: comparacion de opcionales\n--benchmark: 120 cuadros de vista fija sin ventana\n--frames N: prueba de ventana\n--save ruta: archivo de progreso alternativo\nG/cruceta izquierda: gravedad, F6/cruceta derecha: normal mapping\nH: controles, N/R3: destino, M/Share: audio, F4/cruceta abajo: calidad, F5/cruceta arriba: vibracion"
                 );
                 return Ok(());
             }
@@ -129,12 +135,27 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     if let Some(path) = recording {
         if software {
-            return capture::record_software(&path, frames, quality, record_start);
+            return capture::record_software(
+                &path,
+                frames,
+                quality,
+                record_start,
+                normal_mapping,
+                gravity_enabled,
+            );
         }
-        return capture::record(&path, frames, quality, record_start);
+        return capture::record(
+            &path,
+            frames,
+            quality,
+            record_start,
+            normal_mapping,
+            gravity_enabled,
+        );
     }
     let mut scene = Scene::new()?;
     let mut game = Game::new();
+    game.gravity_enabled = gravity_enabled;
     let resolutions = if software || (export.is_some() && !gpu_export) || benchmark {
         SOFTWARE_RESOLUTIONS
     } else {
@@ -142,6 +163,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
     let (width, height) = resolutions[quality];
     let mut renderer = Renderer::new(width, height);
+    renderer.normal_mapping = normal_mapping;
     let mut hud = Renderer::new(640, 360);
     let mut controls = Controls::new();
     if export.is_some() || benchmark || frames.is_some() {
@@ -432,6 +454,10 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             redraw = true;
         }
+        if command.normal_mapping {
+            renderer.normal_mapping = !renderer.normal_mapping;
+            redraw = true;
+        }
         if rl.is_key_pressed(KeyboardKey::KEY_F1) {
             debug = !debug;
             redraw = true;
@@ -448,8 +474,10 @@ fn main() -> Result<(), Box<dyn Error>> {
             quality = (quality + 1) % 3;
             let (w, h) = resolutions[quality];
             let culling = renderer.culling;
+            let normal_mapping = renderer.normal_mapping;
             renderer = Renderer::new(w, h);
             renderer.culling = culling;
+            renderer.normal_mapping = normal_mapping;
             renderer.gpu = !software;
             if let Some(gpu) = &mut gpu {
                 gpu.resize(&mut rl, &thread, w, h)?;

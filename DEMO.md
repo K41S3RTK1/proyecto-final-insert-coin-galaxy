@@ -45,3 +45,7 @@ F5/cruceta arriba conmuta la vibración; se detiene en pausa y pérdida de foco.
 ## Sonic Grand Prix — versión 0.8
 
 Selecciona SONIC GRAND PRIX con N/R3 en vuelo y entra al portal con E/X. Para ensayo rápido: N hasta ese destino, Home, E. En el selector: A/D o stick izquierdo, Enter/X confirma. Muestra los tres modelos OBJ. En carrera: A/D o stick dirige, Espacio/X salta, Shift/R2 acelera, mantener y soltar K/L2 hace Spin Dash y L/R1 activa la habilidad. Sonic ataca con dash, Tails vuela y Knuckles planea. Muestra el loop, anillos, un salto y la quinta insignia al llegar primero. P/Options pausa, Q/círculo regresa al sistema. `output/Sonic_Grand_Prix.mp4` es un clip separado del nuevo mundo; el video v0.7 conserva sus cuatro desafíos originales.
+
+## Opcionales v0.9
+
+Ver [OPCIONALES.md](OPCIONALES.md). En CPU: acercarse al planeta, pausar y alternar F6 para comparar relieve con cámara fija; F1 muestra estado. Reanudar, salir de asistencia orbital y dar impulso lateral; soltar y observar la atracción. G desactiva gravedad. Comparar dos semillas con el generador y mostrar sus manifiestos/OBJ en Blender. Cruceta derecha e izquierda duplican F6 y G en PS5.

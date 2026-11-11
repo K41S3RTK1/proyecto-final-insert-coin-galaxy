@@ -125,6 +125,8 @@ pub struct Game {
     pub pitch: f32,
     turn: Vec3,
     pub local_orbit: bool,
+    pub gravity_enabled: bool,
+    pub gravity_acceleration: Vec3,
     pub player: Vec3,
     pub bullets: Vec<Bullet>,
     pub health: i32,
@@ -179,6 +181,8 @@ impl Game {
             pitch: 0.,
             turn: Vec3::default(),
             local_orbit: false,
+            gravity_enabled: true,
+            gravity_acceleration: Vec3::default(),
             player: Vec3::new(-3., 0., 12.),
             bullets: vec![],
             health: 3,
@@ -381,6 +385,10 @@ impl Game {
             p.life -= dt;
         }
         self.particles.retain(|p| p.life > 0.);
+        self.gravity_acceleration = Vec3::default();
+        if i.gravity && self.mode == Mode::Flight {
+            self.gravity_enabled = !self.gravity_enabled;
+        }
         let old_planet = self.planet_at(self.active_world);
         self.time += dt;
         if i.destination && self.mode == Mode::Flight {
@@ -431,8 +439,22 @@ impl Game {
                             movement * (if i.boost { 16. } else { 7. } / movement.length().max(1.));
                         self.velocity = self.velocity.lerp(
                             if i.brake { Vec3::default() } else { target },
-                            1. - (-(if i.brake { 10. } else { 3. }) * dt).exp(),
+                            1. - (-(if i.brake {
+                                10.
+                            } else if self.gravity_enabled && movement.length() < 0.01 {
+                                0.12
+                            } else {
+                                3.
+                            }) * dt)
+                                .exp(),
                         );
+                        if self.gravity_enabled {
+                            self.gravity_acceleration = crate::gravity::acceleration(
+                                self.ship,
+                                WorldId::ALL.map(|id| self.planet_at(id)),
+                            );
+                            self.velocity = self.velocity + self.gravity_acceleration * dt;
+                        }
                         self.ship = self.ship + self.velocity * dt;
                     }
                     self.resolve_collisions();
@@ -978,8 +1000,53 @@ mod tests {
         assert!((a.planet() - b.planet()).length() < 0.002);
     }
     #[test]
+    fn gravity_deflects_free_flight_and_is_stable_across_time_steps() {
+        let simulate = |enabled, hz| {
+            let mut g = Game::new();
+            g.mode = Mode::Flight;
+            g.gravity_enabled = enabled;
+            g.ship = g.planet() + Vec3::new(0., 3., 18.);
+            g.velocity = Vec3::new(3., 0., 0.);
+            for _ in 0..hz * 3 {
+                g.tick(Input::default(), 1. / hz as f32);
+            }
+            g
+        };
+        let on = simulate(true, 120);
+        let off = simulate(false, 120);
+        let coarse = simulate(true, 30);
+        assert!(
+            on.ship.z < off.ship.z - 1.,
+            "gravity must curve the path toward the planet"
+        );
+        assert!(
+            (on.ship - coarse.ship).length() < 0.15,
+            "dt must keep trajectories close"
+        );
+        assert_eq!(on.yaw, 0.);
+        assert_eq!(on.pitch, 0.);
+        let mut paused = on;
+        paused.paused = true;
+        let p = paused.ship;
+        for _ in 0..120 {
+            paused.tick(Input::default(), 1. / 120.);
+        }
+        assert_eq!((paused.ship - p).length(), 0.);
+        paused.paused = false;
+        paused.tick(
+            Input {
+                gravity: true,
+                ..Input::default()
+            },
+            1. / 120.,
+        );
+        assert!(!paused.gravity_enabled);
+        assert_eq!(paused.gravity_acceleration.length(), 0.);
+    }
+    #[test]
     fn idle_chase_camera_does_not_orbit() {
         let mut g = Game::new();
+        g.gravity_enabled = false;
         g.mode = Mode::Flight;
         let eye = g.camera_eye;
         let heading = g.camera_target - g.camera_eye;

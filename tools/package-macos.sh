@@ -15,3 +15,7 @@ cp assets/fonts/* "$bundle/Contents/Resources/assets/fonts/"
 
 mkdir -p "$bundle/Contents/Resources/assets/models"
 cp assets/models/*.obj assets/models/*.mtl "$bundle/Contents/Resources/assets/models/"
+
+mkdir -p "$bundle/Contents/Resources/assets/textures"
+cp assets/textures/*.png "$bundle/Contents/Resources/assets/textures/"
+cp assets/models/placements.json "$bundle/Contents/Resources/assets/models/"

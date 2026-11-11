@@ -1,6 +1,6 @@
-# Verificación contra la consigna — 2026-11-05
+# Verificación contra la consigna — 2026-11-10
 
-Se revisaron las cinco páginas de **PROYECTO_FINAL GRAFICAS 2026.pdf**, aportado por el estudiante, y el código de la entrega v0.8. Esta auditoría distingue requisitos obligatorios, características demostrables y evaluación del docente. No representa una nota otorgada.
+Se revisaron las cinco páginas de **PROYECTO_FINAL GRAFICAS 2026.pdf**, aportado por el estudiante, y el código de la entrega v0.9. Esta auditoría distingue requisitos obligatorios, características demostrables y evaluación del docente. No representa una nota otorgada.
 
 ## Requisitos obligatorios
 
@@ -32,25 +32,25 @@ Puntos **postulables**, sujetos a funcionar en la demostración, identidad visua
 | Colisión básica con planetas | 4 | `resolve_collisions` impide penetración y elimina velocidad hacia el interior; test de colisión |
 | Descarte de objetos fuera de vista | 7 | Frustum culling anterior a transformación/rasterización. F1 muestra descartes; F2 compara desde cámara pausada |
 | Nivel de detalle por distancia | 8 | OBJ cercanos/lejanos y esferas con distinta resolución; umbral de 42 unidades para planetas. F1/F3 permiten comparar triángulos |
+| Distribución de instancias por ruido | 10, condicionados | Perlin 3D con semilla en tools/noise3d.py; posiciones horneadas en OBJ, manifiesto y LOD coincidentes. Falta confirmar que Perlin coincida con lo visto en clase; ver OPCIONALES.md |
+| Normal mapping en software | 8 | PNG RGB de normales, filtro bilineal y TBN por fragmento en src/normal_map.rs y renderer.rs; F6 compara sin cambiar geometría |
+| Atracción gravitatoria planetaria | 10 | src/gravity.rs y vuelo libre en game.rs; G compara, HUD muestra aceleración. No confundir con asistencia orbital |
 | Coherencia visual y composición | 0–5 | Dirección Green Hill y modelos específicos; valoración docente |
 | Claridad de controles y recorrido | 0–5 | Menús, HUD, ayuda H, documentación y video; valoración docente |
 
-Subtotal técnico postulable: **162 puntos**; presentación hasta **10**. La consigna limita la nota a 100. Esto indica margen técnico para aspirar a 100, **no garantiza esa nota**: cada criterio depende de la demostración y explicación, y el docente puede asignar puntos parciales.
+Subtotal técnico postulable: **190 puntos**, de los cuales **10 dependen de confirmar que Perlin se vio en clase**; sin ese criterio, **180**. Presentación: hasta **10** adicionales. La consigna limita la nota a 100. Esto indica margen técnico para aspirar a 100, **no garantiza esa nota**: cada criterio depende de la demostración y explicación, y el docente puede asignar puntos parciales.
 
-## No se solicitan estos puntos
-
-- Distribución de instancias mediante algoritmos de ruido vistos en clase: **0/10**. Semilla fija y trigonometría no sustituyen este criterio.
-- Normal mapping en software: **0/8**. Interpolar normales OBJ suaviza iluminación, pero no es normal mapping.
-- Atracción gravitatoria planetaria sobre la nave: **0/10**. La asistencia orbital es control directo; gravedad de los saltos no cuenta aquí.
+Los tres opcionales antes pendientes ya tienen implementación. [OPCIONALES.md](OPCIONALES.md) explica cómo compararlos y sus límites.
 
 ## Validación de entrega
 
-- 48 pruebas automatizadas y Clippy sin advertencias.
+- v0.9: 54 pruebas Rust en release, 3 pruebas Python de ruido/distribución y Clippy sin advertencias. Capturas CPU/GPU con normal mapping activado/desactivado verificadas. Aplicación macOS empaquetada con textura y manifiesto.
 - Video CPU verificado con FFprobe: H.264, 800×450, 900 cuadros a 30 fps, 30 s y AAC estéreo; decodificación completa sin errores y revisión de acercamiento, órbita y alejamiento.
-- Copia limpia clonada desde Git, con directorio de compilación nuevo: `cargo test --release --locked --offline` aprobó 48/48; build release y exportación de la vista general CPU completados usando solo código y assets versionados. Las dependencias se tomaron de la caché Cargo local.
+- Validación histórica v0.8: copia limpia clonada desde Git, con directorio de compilación nuevo: `cargo test --release --locked --offline` aprobó 48/48; build release y exportación de la vista general CPU completados usando solo código y assets versionados. Las dependencias se tomaron de la caché Cargo local.
 - Ruta CPU sin ventana para capturas y video: no inicializa un contexto GPU.
-- Muestras locales CPU a 640×360, 120 cuadros de cámara fija: jardín cercano **34.5 FPS**, p95 **29.2 ms**; vista general **72.4 FPS**, p95 **14.0 ms**. Son mediciones puntuales en esta Mac, no garantía de otra máquina o todo el juego.
-- Otras vistas cercanas CPU a 640×360: Dojo **81.8 FPS**, Runner **48.0 FPS**, Mario **82.1 FPS**, Race **75.7 FPS**. Contadores y condiciones en output/validacion-entrega.txt.
+- v0.9: CPU 640×360, 120 cuadros de cámara fija: jardín cercano **29.5 FPS**, p95 **34.2 ms**; sistema **67.7 FPS**, p95 **14.9 ms**. GPU 1920×1080, 120 cuadros de jardín cercano: **53.3 FPS**, p95 **24.9 ms** (límite 60 FPS). Muestras de esta Mac con normal mapping activado; no garantía de toda la partida.
+- Mediciones históricas v0.8, CPU a 640×360, 120 cuadros de cámara fija: jardín cercano **34.5 FPS**, p95 **29.2 ms**; vista general **72.4 FPS**, p95 **14.0 ms**. Son mediciones puntuales en esta Mac, no garantía de otra máquina o todo el juego.
+- Otras vistas históricas v0.8, CPU a 640×360: Dojo **81.8 FPS**, Runner **48.0 FPS**, Mario **82.1 FPS**, Race **75.7 FPS**. Contadores y condiciones en output/validacion-entrega.txt.
 - Datos de autoría: proyecto individual de **Daniel Sandoval**, contribuciones detalladas en ENTREGA.md.
 - Regeneración del video CPU: tools/record-academic.sh; el FPS del archivo es fijo y no es un benchmark.
 - El mando fue probado por el usuario en versiones anteriores. La sensación física de las acciones nuevas/vibración requiere ensayo humano; no se acredita mediante un contador de API.

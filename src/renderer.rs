@@ -141,6 +141,7 @@ impl Mesh {
 struct Vertex {
     clip: [f32; 4],
     normal: Vec3,
+    tangent: Vec3,
     local: Vec3,
     world: Vec3,
 }
@@ -149,6 +150,7 @@ impl Vertex {
         Self {
             clip: std::array::from_fn(|i| self.clip[i] + (b.clip[i] - self.clip[i]) * t),
             normal: self.normal.lerp(b.normal, t),
+            tangent: self.tangent.lerp(b.tangent, t),
             local: self.local.lerp(b.local, t),
             world: self.world.lerp(b.world, t),
         }
@@ -173,6 +175,7 @@ pub struct GpuVertex {
     pub color: [f32; 4],
     pub world: [f32; 3],
     pub style: f32,
+    pub tangent: [f32; 3],
 }
 #[derive(Clone)]
 pub enum Paint {
@@ -195,6 +198,7 @@ pub struct Renderer {
     pub time: f32,
     pub stats: Stats,
     pub culling: bool,
+    pub normal_mapping: bool,
 }
 impl Renderer {
     pub fn new(width: usize, height: usize) -> Self {
@@ -213,6 +217,7 @@ impl Renderer {
             time: 0.,
             stats: Stats::default(),
             culling: true,
+            normal_mapping: true,
         }
     }
     pub fn begin(&mut self, eye: Vec3, target: Vec3, time: f32) {
@@ -325,6 +330,12 @@ impl Renderer {
                     clip: mvp.transform(p),
                     world: Vec3::new(w[0], w[1], w[2]),
                     local: p,
+                    tangent: {
+                        let t = crate::normal_map::tangent(p);
+                        Vec3::new(t.x * scale.x, t.y * scale.y, t.z * scale.z)
+                            .rotate_y(yaw)
+                            .normalized()
+                    },
                     normal: Vec3::new(n.x / scale.x, n.y / scale.y, n.z / scale.z)
                         .rotate_y(yaw)
                         .normalized(),
@@ -404,6 +415,10 @@ impl Renderer {
                     clip: positions[index].0,
                     world: ps[i],
                     normal: corner_normals[i],
+                    tangent: crate::normal_map::tangent(m.vertices[index])
+                        .rotate_z(bank)
+                        .rotate_x(pitch)
+                        .rotate_y(yaw),
                     local: m.vertices[index],
                 }
             });
@@ -446,6 +461,7 @@ impl Renderer {
                     ],
                     world: [v.world.x, v.world.y, v.world.z],
                     style: mat.style as u32 as f32,
+                    tangent: [v.tangent.x, v.tangent.y, v.tangent.z],
                 });
             }
             return;
@@ -578,10 +594,19 @@ impl Renderer {
                                 .clamp(0., 255.) as u8
                         })
                     } else {
-                        let n = (v[0].normal * w[0] + v[1].normal * w[1] + v[2].normal * w[2])
+                        let mut n = (v[0].normal * w[0] + v[1].normal * w[1] + v[2].normal * w[2])
                             .normalized();
                         let p = v[0].local * w[0] + v[1].local * w[1] + v[2].local * w[2];
                         let world = v[0].world * w[0] + v[1].world * w[1] + v[2].world * w[2];
+                        if self.normal_mapping
+                            && matches!(
+                                mat.style,
+                                Style::GardenSurface | Style::RunnerSurface | Style::MarioSurface
+                            )
+                        {
+                            let t = v[0].tangent * w[0] + v[1].tangent * w[1] + v[2].tangent * w[2];
+                            n = crate::normal_map::mapped(n, t, p);
+                        }
                         fragment(mat, n, p, world, self.eye, self.time, x, y)
                     }
                 };
@@ -808,13 +833,7 @@ fn fragment(
             } else {
                 [55, 193, 22]
             };
-            intensity = if light > 0.5 {
-                1.
-            } else if light > -0.1 {
-                0.88
-            } else {
-                0.72
-            };
+            intensity = 0.70 + 0.30 * light.max(0.);
         }
         Style::Checker => {
             let check =
@@ -891,12 +910,47 @@ mod tests {
         );
     }
     #[test]
+    fn normal_texture_changes_lighting_without_changing_geometry() {
+        let mesh = Mesh::sphere(20, 32);
+        let render = |enabled| {
+            let mut r = Renderer::new(160, 120);
+            r.normal_mapping = enabled;
+            r.begin(Vec3::new(0., 0., 3.), Vec3::default(), 0.);
+            r.mesh(
+                &mesh,
+                Vec3::default(),
+                Vec3::new(1., 1., 1.),
+                0.7,
+                Material::new([55, 193, 22], Style::GardenSurface),
+            );
+            r
+        };
+        let flat = render(false);
+        let mapped = render(true);
+        assert_eq!(
+            flat.depth, mapped.depth,
+            "normal maps must not change silhouette or depth"
+        );
+        let changed = flat
+            .pixels
+            .chunks_exact(4)
+            .zip(mapped.pixels.chunks_exact(4))
+            .filter(|(a, b)| a != b)
+            .count();
+        assert!(
+            changed > 500,
+            "expected visible per-fragment lighting variation, got {changed}"
+        );
+        assert_eq!(std::mem::size_of::<GpuVertex>(), 84);
+    }
+    #[test]
     fn near_plane_clipping_keeps_crossing_triangle() {
         let mut r = Renderer::new(80, 60);
         r.begin(Vec3::default(), Vec3::new(0., 0., -1.), 0.);
         let mk = |p| Vertex {
             clip: r.vp.transform(p),
             normal: Vec3::new(0., 0., 1.),
+            tangent: Vec3::new(1., 0., 0.),
             local: p,
             world: p,
         };

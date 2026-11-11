@@ -1,4 +1,4 @@
-# Modelos OBJ — versión 0.8
+# Modelos OBJ — versión 0.9
 
 La nave y los cinco planetas exteriores se cargan desde archivos Wavefront OBJ con materiales MTL. Se pueden importar en Blender; conserva cada .obj junto a su .mtl. Los modelos contienen grupos de piezas y normales de vértice (`vn`, caras `v//vn`). Los objetos se triangulan antes de cargar. Los interiores conservan su geometría de juego y añaden palmeras y loops OBJ como decoración.
 
@@ -20,30 +20,32 @@ Todos los planetas incorporan terrazas de césped, acantilados ajedrezados, palm
 | Archivo | Vértices | Triángulos |
 |---|---:|---:|
 | `arcade-ship.obj` | 12,485 | 9,720 |
-| `dojo-low.obj` | 17,368 | 15,816 |
-| `dojo.obj` | 33,960 | 41,048 |
-| `garden-low.obj` | 20,496 | 23,076 |
-| `garden.obj` | 51,664 | 66,708 |
+| `dojo-low.obj` | 18,208 | 15,196 |
+| `dojo.obj` | 35,280 | 37,548 |
+| `garden-low.obj` | 23,144 | 24,968 |
+| `garden.obj` | 58,284 | 71,552 |
 | `hill-loop.obj` | 800 | 1,600 |
 | `hill-palm.obj` | 2,184 | 2,108 |
-| `mario-low.obj` | 13,239 | 14,901 |
-| `mario.obj` | 33,091 | 43,917 |
-| `runner-low.obj` | 13,344 | 14,976 |
-| `runner.obj` | 33,836 | 46,840 |
-
-| `race-low.obj` | 11,332 | 13,952 |
-| `race.obj` | 30,800 | 44,712 |
+| `mario-low.obj` | 11,507 | 13,589 |
+| `mario.obj` | 29,331 | 41,237 |
+| `runner-low.obj` | 11,112 | 13,796 |
+| `runner.obj` | 29,444 | 45,180 |
+| `race-low.obj` | 8,700 | 12,744 |
+| `race.obj` | 25,568 | 43,424 |
 | `sonic.obj` | 18,244 | 31,852 |
 | `tails.obj` | 19,892 | 34,972 |
 | `knuckles.obj` | 29,460 | 51,808 |
 
 Las versiones `-low.obj` se usan cuando la distancia al planeta supera 42 unidades. F3 permite desactivar LOD y F1 muestra los triángulos enviados. Se aplica descarte por volumen antes de transformar y descarte de caras posteriores antes de rasterizar. Ambos renderizadores usan las mismas posiciones, normales y materiales.
 
+La distribución se obtiene con Perlin 3D y semilla 2026. `assets/models/placements.json` registra los sitios exactos; ambas resoluciones comparten posiciones. Los monumentos principales conservan su colocación manual.
+
 ## Regenerar
 
 ```sh
 python3 tools/build_ship.py
-python3 tools/build_planets.py
+python3 tools/build_planets.py --seed 2026
+python3 tools/build_normal_map.py
 python3 tools/build_racers.py
 cargo build --release --offline --locked
 ./tools/package-macos.sh
@@ -51,7 +53,7 @@ cargo build --release --offline --locked
 
 El generador usa únicamente Python estándar. `tools/asset_mesh.py` implementa superficies, cilindros, cajas biseladas, toros, marcos tangentes y exportación. Las normales suaves se usan en superficies curvas y se separan en aristas de piezas rígidas. No se descargaron modelos de terceros.
 
-Los materiales `hero_` usan iluminación suave y brillo de borde tenue para conservar los colores de los corredores. Los materiales `paint_` emplean iluminación suave; `surface_` añade transiciones continuas de vegetación/agua; `city_` ventanas; `terrain_` terreno; `glass` cristal; `glow_` y `engine` superficies emisivas. El cargador lee Kd del MTL y usa estas convenciones para elegir los shaders propios. Ke/Ks/Ns se exportan para edición externa, pero este renderer no interpreta sus valores: no afirmar compatibilidad completa con todos los materiales de Blender. No hay mapas de textura ni normal mapping.
+Los materiales `hero_` usan iluminación suave y brillo de borde tenue para conservar los colores de los corredores. Los materiales `paint_` emplean iluminación suave; `surface_` añade transiciones continuas de vegetación/agua; `city_` ventanas; `terrain_` terreno; `glass` cristal; `glow_` y `engine` superficies emisivas. El cargador lee Kd del MTL y usa estas convenciones para elegir los shaders propios. Ke/Ks/Ns se exportan para edición externa, pero este renderer no interpreta sus valores: no afirmar compatibilidad completa con todos los materiales de Blender. En v0.9, las superficies planetarias usan un PNG de normales con UV esféricas y TBN en CPU/GPU. No se interpreta una directiva normal-map del MTL; es un material explícito del renderer. F6 permite comparar. Ver OPCIONALES.md.
 
 ## Capturas reproducibles
 

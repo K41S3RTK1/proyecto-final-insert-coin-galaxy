@@ -6,6 +6,10 @@
 !/output/race-v8.png
 !/output/race-planet-v8.png
 !/output/validacion-entrega.txt
+!/output/normal-map-cpu-on.png
+!/output/normal-map-cpu-off.png
+!/output/normal-map-gpu-on.png
+!/output/normal-map-gpu-off.png
 .DS_Store
 /saves/
 __pycache__/

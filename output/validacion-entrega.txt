@@ -1,3 +1,28 @@
+INSERT COIN: GALAXY v0.9 — verificación local 2026-11-10
+
+54/54 pruebas Rust release; 3/3 pruebas Python; Clippy -D warnings y fmt: OK.
+Comparación visual CPU/GPU normal mapping ON/OFF: OK.
+Shader GLSL compilado y PNG de normales cargado desde el bundle macOS: OK.
+Captura de selección de los tres corredores desde el bundle: OK.
+Mando no conectado durante estas comprobaciones; no se afirma prueba física nueva.
+
+CPU 640x360, 120 cuadros de vista fija, opcionales activados:
+close: 29.5 FPS, p95 34.2 ms; 117353 enviados, 53694 rasterizados, 120 descartes.
+system: 67.7 FPS, p95 14.9 ms; 99421 enviados, 35482 rasterizados, 60 descartes.
+GPU 1920x1080, ventana limitada a 60 FPS, 120 cuadros de close:
+53.3 FPS, p95 24.9 ms. Apple M1. Muestras locales, no garantía global.
+
+Generación adicional semilla 42 en carpeta separada: OK; posiciones distintas.
+Manifiesto de semilla 2026 coincide con grupos de ambos LOD en los OBJ entregados.
+Perlin implementado; coincidencia con algoritmo de clase todavía por confirmar.
+
+Video CPU actualizado: 30.000 s, H.264, 800x450, 900 cuadros, 30 fps,
+AAC estéreo, 7632171 bytes. Decodificación completa FFmpeg sin errores.
+El recorrido académico automático y continuo sigue pasando su prueba.
+Normal mapping y gravedad por defecto activados; asistencia orbital explícita.
+
+--- Registro histórico v0.8 (no son las mediciones de v0.9) ---
+
 INSERT COIN: GALAXY — verificación local 2026-11-05
 Autor: Daniel Sandoval. Trabajo individual. Datos de entrega en ENTREGA.md.
 

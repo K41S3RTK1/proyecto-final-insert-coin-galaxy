@@ -223,6 +223,8 @@ pub fn record(
     frame_limit: Option<usize>,
     quality: usize,
     start_frame: usize,
+    normal_mapping: bool,
+    gravity_enabled: bool,
 ) -> Result<(), Box<dyn Error>> {
     if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
         std::fs::create_dir_all(parent)?;
@@ -279,6 +281,7 @@ pub fn record(
     let mut g = Game::new();
     let controls = Controls::new();
     let mut r = Renderer::new(width, height);
+    r.normal_mapping = normal_mapping;
     r.gpu = true;
     let mut hud = Renderer::new(640, 360);
     hud.gpu = true;
@@ -297,6 +300,7 @@ pub fn record(
         let segment = shot(frame);
         if segment != last {
             setup(&mut g, segment);
+            g.gravity_enabled = gravity_enabled;
             last = segment;
             println!(
                 "Video: escena {} / cuadro {} de {}",
@@ -399,6 +403,8 @@ pub fn record_software(
     frame_limit: Option<usize>,
     quality: usize,
     start_frame: usize,
+    normal_mapping: bool,
+    gravity_enabled: bool,
 ) -> Result<(), Box<dyn Error>> {
     if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
         std::fs::create_dir_all(parent)?;
@@ -457,8 +463,10 @@ pub fn record_software(
     writeln!(metrics, "frame\trender_ms\tsubmitted\trasterized\tculled")?;
     let scene = Scene::new()?;
     let mut g = software_setup();
+    g.gravity_enabled = gravity_enabled;
     let controls = Controls::new();
     let mut r = Renderer::new(width, height);
+    r.normal_mapping = normal_mapping;
     let mut hud = Renderer::new(640, 360);
     for frame in 0..count {
         for sub in 0..4 {

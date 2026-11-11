@@ -23,6 +23,8 @@ pub struct Input {
     pub jump: bool,
     pub slide: bool,
     pub vibration: bool,
+    pub gravity: bool,
+    pub normal_mapping: bool,
 }
 impl Input {
     pub fn merge_edges(&mut self, other: Self) {
@@ -30,6 +32,8 @@ impl Input {
         self.jump |= other.jump;
         self.slide |= other.slide;
         self.vibration |= other.vibration;
+        self.gravity |= other.gravity;
+        self.normal_mapping |= other.normal_mapping;
         self.accept |= other.accept;
         self.back |= other.back;
         self.pause |= other.pause;
@@ -46,6 +50,8 @@ impl Input {
         self.jump = false;
         self.slide = false;
         self.vibration = false;
+        self.gravity = false;
+        self.normal_mapping = false;
         self.accept = false;
         self.back = false;
         self.pause = false;
@@ -112,6 +118,8 @@ impl Controls {
                 || rl.is_key_pressed(KEY_UP),
             slide: rl.is_key_pressed(KEY_S) || rl.is_key_pressed(KEY_DOWN),
             vibration: rl.is_key_pressed(KEY_F5),
+            gravity: rl.is_key_pressed(KEY_G),
+            normal_mapping: rl.is_key_pressed(KEY_F6),
         };
         if i.forward != 0.
             || i.strafe != 0.
@@ -131,6 +139,8 @@ impl Controls {
             || i.quality
             || i.jump
             || i.slide
+            || i.gravity
+            || i.normal_mapping
             || i.vibration
         {
             self.using_pad = false;
@@ -155,6 +165,8 @@ impl Controls {
             let quality = pressed(GAMEPAD_BUTTON_LEFT_FACE_DOWN);
             let slide = pressed(GAMEPAD_BUTTON_LEFT_TRIGGER_2);
             let vibration = pressed(GAMEPAD_BUTTON_LEFT_FACE_UP);
+            let gravity = pressed(GAMEPAD_BUTTON_LEFT_FACE_LEFT);
+            let normal_mapping = pressed(GAMEPAD_BUTTON_LEFT_FACE_RIGHT);
             let lift = if down(GAMEPAD_BUTTON_RIGHT_TRIGGER_1) {
                 1.
             } else {
@@ -178,6 +190,8 @@ impl Controls {
                 || mute
                 || quality
                 || slide
+                || gravity
+                || normal_mapping
                 || vibration
                 || lift != 0.
                 || down(GAMEPAD_BUTTON_LEFT_TRIGGER_2)
@@ -203,6 +217,8 @@ impl Controls {
             i.jump |= accept;
             i.slide |= slide;
             i.vibration |= vibration;
+            i.gravity |= gravity;
+            i.normal_mapping |= normal_mapping;
             i.brake |= down(GAMEPAD_BUTTON_LEFT_TRIGGER_2);
             i.boost |= down(GAMEPAD_BUTTON_LEFT_THUMB);
         } else {
@@ -214,6 +230,18 @@ impl Controls {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn optional_toggles_survive_accumulation_but_fire_once() {
+        let mut i = Input::default();
+        i.merge_edges(Input {
+            gravity: true,
+            normal_mapping: true,
+            ..Input::default()
+        });
+        assert!(i.gravity && i.normal_mapping);
+        i.clear_edges();
+        assert!(!i.gravity && !i.normal_mapping);
+    }
     #[test]
     fn stick_drift_and_full_range() {
         for v in [-0.17, 0., 0.17] {

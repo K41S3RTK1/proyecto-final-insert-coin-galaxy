@@ -1,6 +1,9 @@
 #version 330
 in vec3 localPos; in vec3 worldPos; in vec3 normal; in vec4 color;
+in vec3 tangent;
 flat in int style;
+uniform sampler2D terrainNormal;
+uniform int normalMapping;
 uniform vec3 eye;
 uniform float time;
 uniform vec3 fogColor;
@@ -8,6 +11,15 @@ uniform float fogAmount;
 out vec4 finalColor;
 void main() {
     vec3 n=normalize(normal), v=normalize(eye-worldPos), light=normalize(vec3(-0.5,0.8,0.6));
+    if(normalMapping!=0 && style>=9 && style<=11) {
+        vec3 p=normalize(localPos);
+        vec2 uv=vec2((atan(p.z,p.x)/6.28318530718+.5)*4.,(.5-asin(clamp(p.y,-1.,1.))/3.14159265359)*2.);
+        vec3 sampled=normalize(texture(terrainNormal,uv).rgb*2.-1.);
+        vec3 t=tangent-n*dot(n,tangent);
+        if(length(t)<.000001) t=cross(abs(n.y)<.9?vec3(0.,1.,0.):vec3(1.,0.,0.),n);
+        t=normalize(t);
+        n=normalize(t*sampled.x*.8+cross(n,t)*sampled.y*.8+n*sampled.z);
+    }
     float nl=dot(n,light), facing=abs(dot(n,v));
     vec3 base=color.rgb;
     if(style==2) {
@@ -56,6 +68,7 @@ void main() {
         base=mix(vec3(.04,.78,.88),vec3(.56,.98,1.),smoothstep(.8,.95,wave));
     }
     float diffuse=.72+.16*smoothstep(-.12,-.06,nl)+.12*smoothstep(.47,.53,nl);
+    if(style>=9 && style<=11) diffuse=.70+.30*max(nl,0.);
     if(style==14) diffuse=.67+.33*max(nl,0.);
     float shine=pow(max(dot(n,normalize(v+light)),0.),style==3?36.:50.);
     vec3 lit=base*diffuse + vec3(1.,.94,.82)*shine*(style==3?.38:.06);

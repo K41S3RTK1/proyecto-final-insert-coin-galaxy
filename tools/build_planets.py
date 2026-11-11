@@ -1,8 +1,13 @@
-"""Bake four authored miniature worlds into OBJ/MTL, with near/far meshes.
+"""Bake five authored miniature worlds into OBJ/MTL, with near/far meshes.
 All exterior details use a local tangent frame and rotate with the parent planet.
 No downloaded meshes; run python3 tools/build_planets.py to regenerate.
 """
 from asset_mesh import *
+from noise3d import scatter, hash32
+from functools import lru_cache
+import argparse, json
+SEED = 2026
+manifest = {}
 root=Path(__file__).resolve().parents[1]/'assets/models'
 palette={
  'surface_garden':(.24,.55,.31),'surface_runner':(.98,.73,.17),'surface_mario':(.24,.55,.31),
@@ -39,10 +44,23 @@ def globe(m,kind):
    else:mat='surface_'+kind
    if j>0:m.tri(a,b,c,mat)
    if j<rows-1:m.tri(b,d,c,mat)
-def placements(count):
- for k in range(count):
-  y=1-2*(k+.5)/count;a=k*2.399963;r=math.sqrt(1-y*y)
-  yield k,(r*math.cos(a),y,r*math.sin(a))
+@lru_cache(None)
+def placement_sites(count, label):
+ seed = hash32(SEED + sum((i+1)*ord(c) for i,c in enumerate(label)))
+ fixed = [norm(v) for v in [(0,1,.1),(0,.2,1),(-.78,.5,.6),(.70,.42,.65)]]
+ if label.endswith('_hill'):
+  allowed = lambda n: n[1] >= -.65
+ else:
+  kind = label
+  allowed = lambda n: (kind != 'runner' or (.3 <= abs(n[1]) and n[1] <= .85)) and (kind != 'dojo' or n[1] <= .82) and (kind != 'mario' or n[1] <= .7)
+  fixed += [n for _,_,n in placement_sites(10,kind+'_hill')]
+ sites = scatter(count,seed,allowed,fixed)
+ manifest[label] = {'seed':seed,'instances':[{'candidate':k,'noise':score,'normal':n} for score,k,n in sites]}
+ return sites
+
+def placements(count,label):
+ for score,k,n in placement_sites(count,label):
+  yield k,n
 def mushroom(m,c,scale=1):
  x,y,z=c;m.cylinder((x,y,z),.18*scale,.7*scale,'paint_cream',.14*scale)
  m.sphere((x,y+.77*scale,z),(.65*scale,.30*scale,.65*scale),'paint_red')
@@ -75,7 +93,7 @@ def palm(m,scale=1):
   m.polygon(pts,'paint_leaf_light' if k%2 else 'paint_grass');m.polygon(list(reversed(pts)),'paint_leaf')
  for x in [-.14,.12]:m.sphere(add(top,(x*scale,-.14*scale,.1*scale)),(.18*scale,)*3,'paint_bark',4,8)
 def hill_details(m,kind):
- for k,n in placements(13):
+ for k,n in placements(10,kind+'_hill'):
   if n[1]<-.65:continue
   with m.surface(n,radial(n,kind)-.1,f'green_hill_island_{k}'):
    m.box((0,.14,0),(1.5,.6,1.2),'checker_cliff',.10)
@@ -95,7 +113,7 @@ def hill_details(m,kind):
   m.box((0,-.15,.76),(.75,1.85,.025),'water_blue',0)
   for x in [-.28,0,.28]:m.box((x,-.15,.78),(.035,1.8,.025),'glow_cyan',0)
 def garden(m):
- for k,n in placements(18):
+ for k,n in placements(18,'garden'):
   with m.surface(n,radial(n,'garden')-.04,f'garden_detail_{k}'):
    if k%3==0:palm(m,.95)
    elif k%3==1:mushroom(m,(0,0,0),.75)
@@ -116,7 +134,7 @@ def garden(m):
   for x in [-.22,0,.22]:m.sphere((x,.94,.36),(.08,.025,.07),'paint_cream',4,8)
 def dojo(m):
  m.group='orbital_neon_belt';m.torus((0,0,0),5.06,.055,'glow_pink')
- for k,n in placements(24):
+ for k,n in placements(22,'dojo'):
   if n[1]>.82:continue
   with m.surface(n,4.94,f'city_tower_{k}'):
    h=.65+(k%5)*.25;m.box((0,h/2,0),(.55,h,.55),'paint_purple')
@@ -141,7 +159,7 @@ def runner(m):
  for k in range(40 if not m.low else 20):
   a=k*math.tau/(40 if not m.low else 20);n=(math.cos(a),0,math.sin(a))
   with m.surface(n,5.19,'railway_sleepers'):m.box((0,0,0),(.07,.05,.55),'paint_grey',0)
- for k,n in placements(16):
+ for k,n in placements(10,'runner'):
   if abs(n[1])<.3 or n[1]>.85:continue
   with m.surface(n,radial(n,'runner'),f'city_{k}'):
    h=.7+(k%3)*.35;m.box((0,h/2,0),(.65,h,.65),'paint_blue' if k%2 else 'paint_cream')
@@ -159,7 +177,7 @@ def runner(m):
   for x in [-.55,0,.55]:m.box((x,.48,.36),(.35,.28,.03),'paint_black')
   for x in [-.7,.7]:m.sphere((x,.15,.32),(.12,.12,.08),'metal',4,8)
 def mario(m):
- for k,n in placements(14):
+ for k,n in placements(14,'mario'):
   if n[1]>.7:continue
   with m.surface(n,radial(n,'mario')-.05,f'mushroom_detail_{k}'):
    if k%3==0:
@@ -196,10 +214,23 @@ def race(m):
   for k,mat in enumerate(['paint_blue','paint_yellow','paint_red']):
    m.sphere(((k-1)*.85,.5,0),(.33,.5,.33),mat)
    ring(m,((k-1)*.85,1.25,0),.24,.055)
-for low in [False,True]:
- for kind,fn in [('garden',garden),('dojo',dojo),('runner',runner),('mario',mario),('race',race)]:
-  m=Mesh(low);globe(m,kind);fn(m);hill_details(m,kind);m.save(root/f'{kind}{"-low" if low else ""}.obj',palette)
+def main():
+ global root, SEED
+ parser = argparse.ArgumentParser(description=__doc__)
+ parser.add_argument('--seed',type=int,default=2026)
+ parser.add_argument('--output-dir',type=Path,default=root)
+ parser.add_argument('--only',choices=['garden','dojo','runner','mario','race'])
+ args = parser.parse_args()
+ root,SEED = args.output_dir,args.seed
+ placement_sites.cache_clear();manifest.clear()
+ for low in [False,True]:
+  for kind,fn in [('garden',garden),('dojo',dojo),('runner',runner),('mario',mario),('race',race)]:
+   if args.only and args.only != kind:continue
+   m=Mesh(low);globe(m,kind);fn(m);hill_details(m,kind);m.save(root/f'{kind}{"-low" if low else ""}.obj',palette)
+ # Both LODs consume exactly the same seeded placement_sites; only mesh detail changes.
+ (root/'placements.json').write_text(json.dumps({'algorithm':'Perlin 3D gradient noise / quintic fade / 3-octave fBm','seed':SEED,'groups':manifest},indent=2)+'\n')
+ if not args.only:
+  m=Mesh();palm(m,1.);m.save(root/'hill-palm.obj',palette)
+  m=Mesh();ring(m,(0,1.5,0),1.4,.24,'checker_cliff');ring(m,(0,1.5,.19),1.4,.075,'paint_grass');m.save(root/'hill-loop.obj',palette)
 
-# Reusable scene props use the same authored OBJ pipeline inside the minigames.
-m=Mesh();palm(m,1.);m.save(root/'hill-palm.obj',palette)
-m=Mesh();ring(m,(0,1.5,0),1.4,.24,'checker_cliff');ring(m,(0,1.5,.19),1.4,.075,'paint_grass');m.save(root/'hill-loop.obj',palette)
+if __name__ == '__main__':main()

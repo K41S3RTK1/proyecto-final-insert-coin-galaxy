@@ -91,3 +91,7 @@ python3 tools/mix_delivery_audio.py output/sonic-grand-prix-silent.mp4 output/So
 El video anterior continúa disponible; este clip añade el quinto mundo. No demuestra una sesión física con DualSense.
 
 Verificación del clip v0.8: FFprobe confirmó 1200 cuadros H.264, 1920×1080, 30 fps y 40 segundos con AAC estéreo. Se decodificó completo sin errores; tamaño aproximado 16 MiB.
+
+## Actualización CPU v0.9 — 2026-11-10
+
+`Proyecto_Final_CPU.mp4` se regeneró con la distribución Perlin, normal mapping y gravedad por defecto. Conserva 30 s de vuelo continuo a 800×450, 900 cuadros H.264 a 30 fps y AAC estéreo. FFmpeg lo decodificó completo sin errores. La asistencia orbital sigue identificada en el HUD como AUTO; no se presenta ese tramo como órbita gravitacional. Las comparaciones activado/desactivado de los nuevos efectos se describen en OPCIONALES.md. Los videos HD anteriores conservan su contenido de v0.7/v0.8.

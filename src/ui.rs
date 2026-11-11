@@ -273,6 +273,24 @@ pub fn draw(r: &mut Renderer, g: &Game, controls: &Controls, debug: bool, fps: f
                 1,
                 CREAM,
             );
+            text(
+                r,
+                15,
+                157,
+                &format!(
+                    "GRAVEDAD: {}  {:.2} M/S2",
+                    if g.local_orbit {
+                        "AUTO"
+                    } else if g.gravity_enabled {
+                        "ON"
+                    } else {
+                        "OFF"
+                    },
+                    g.gravity_acceleration.length()
+                ),
+                1,
+                MUTED,
+            );
             // Compact map in world XZ coordinates; selecting a destination never teleports.
             panel(r, w - 113, 58, 99, 88);
             let cx = w - 64;
@@ -656,7 +674,7 @@ pub fn draw(r: &mut Renderer, g: &Game, controls: &Controls, debug: bool, fps: f
     }
     if debug {
         let s = r.stats;
-        panel(r, w - 220, 153, 205, 96);
+        panel(r, w - 220, 153, 205, 110);
         for (i, line) in [
             format!(
                 "FPS {fps:.0}  {} {}X{}",
@@ -668,6 +686,10 @@ pub fn draw(r: &mut Renderer, g: &Game, controls: &Controls, debug: bool, fps: f
             format!("TRI RASTER {}", s.triangles),
             format!("OBJ FUERA {}/{}", s.culled, s.objects),
             format!("VIB: {} PULSOS ACEPTADOS", g.vibration_pulses),
+            format!(
+                "F6 NORMAL MAP: {}",
+                if r.normal_mapping { "ON" } else { "OFF" }
+            ),
             "F2: CULLING F3: LOD F4: RES".into(),
         ]
         .iter()
@@ -710,6 +732,8 @@ pub fn help(r: &mut Renderer) {
         "HABILIDAD (SONIC GP)   L               R1",
         "PAUSA / AUDIO           P / M           OPTIONS / SHARE",
         "CALIDAD                 F4              CRUCETA ABAJO",
+        "GRAVEDAD                G               CRUCETA IZQ",
+        "NORMAL MAPPING          F6              CRUCETA DER",
         "F1: METRICAS  F2: CULLING  F3: LOD  F12: CAPTURA",
         "HOME: RESCATE AL DESTINO   H: CERRAR ESTA AYUDA",
     ];
@@ -717,7 +741,7 @@ pub fn help(r: &mut Renderer) {
         text(
             r,
             65,
-            75 + i as i32 * 13,
+            75 + i as i32 * 12,
             line,
             1,
             if i == 0 { MINT } else { CREAM },
@@ -739,6 +763,7 @@ pub fn compose(
     hud.overlay.clear();
     hud.pixels.fill(0);
     hud.stats = out.stats;
+    hud.normal_mapping = out.normal_mapping;
     let fade = if g.paused {
         0.
     } else if g.mode == Mode::Entering {

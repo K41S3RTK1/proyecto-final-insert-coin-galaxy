@@ -12,6 +12,7 @@ pub struct Gpu {
     target: RenderTexture2D,
     resolved: RenderTexture2D,
     font: Font,
+    normal_map: Texture2D,
     vao: u32,
     vbo: u32,
     capacity: usize,
@@ -46,6 +47,12 @@ impl Gpu {
         )?;
         font.texture()
             .set_texture_filter(thread, TextureFilter::TEXTURE_FILTER_BILINEAR);
+        let normal_map = rl.load_texture(
+            thread,
+            &assets.join("textures/terrain-normal.png").to_string_lossy(),
+        )?;
+        normal_map.set_texture_filter(thread, TextureFilter::TEXTURE_FILTER_BILINEAR);
+        normal_map.set_texture_wrap(thread, TextureWrap::TEXTURE_WRAP_REPEAT);
         let target = rl.load_render_texture(thread, width as u32, height as u32)?;
         target
             .texture()
@@ -60,6 +67,7 @@ impl Gpu {
             target,
             resolved,
             font,
+            normal_map,
             vao: 0,
             vbo: 0,
             capacity: 0,
@@ -114,8 +122,9 @@ impl Gpu {
                     (3, 4, 40),
                     (4, 3, 56),
                     (5, 1, 68),
+                    (6, 3, 72),
                 ] {
-                    ffi::rlSetVertexAttribute(index, size, 0x1406, false, 72, offset);
+                    ffi::rlSetVertexAttribute(index, size, 0x1406, false, 84, offset);
                     ffi::rlEnableVertexAttribute(index);
                 }
                 ffi::rlDisableVertexBuffer();
@@ -151,6 +160,12 @@ impl Gpu {
             self.shader.get_shader_location("fogAmount"),
             if game.inside() { 0.45_f32 } else { 0. },
         );
+        self.shader
+            .set_shader_value(self.shader.get_shader_location("terrainNormal"), 1i32);
+        self.shader.set_shader_value(
+            self.shader.get_shader_location("normalMapping"),
+            i32::from(scene.normal_mapping),
+        );
         let mut d = rl.begin_texture_mode(thread, &mut self.target);
         d.clear_background(Color::BLACK);
         draw_paint(&mut d, &self.font, &scene.background, 1.);
@@ -159,11 +174,15 @@ impl Gpu {
             ffi::rlEnableDepthTest();
             ffi::rlDisableBackfaceCulling();
             ffi::rlEnableShader(self.shader.as_ref().id);
+            ffi::rlActiveTextureSlot(1);
+            ffi::rlEnableTexture(self.normal_map.as_ref().id);
             if bytes > 0 {
                 ffi::rlEnableVertexArray(self.vao);
                 ffi::rlDrawVertexArray(0, scene.gpu_vertices.len() as i32);
                 ffi::rlDisableVertexArray();
             }
+            ffi::rlDisableTexture();
+            ffi::rlActiveTextureSlot(0);
             ffi::rlDisableShader();
             ffi::rlDisableDepthTest();
             ffi::rlEnableBackfaceCulling();

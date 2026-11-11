@@ -1,4 +1,4 @@
-# INSERT COIN: GALAXY — versión 0.8
+# INSERT COIN: GALAXY — versión 0.9
 
 **Proyecto individual: Daniel Sandoval.** Repositorio: [K41S3RTK1/proyecto-final-insert-coin-galaxy](https://github.com/K41S3RTK1/proyecto-final-insert-coin-galaxy).
 
@@ -12,6 +12,17 @@
 ![Selección de corredores OBJ](output/race-v8.png)
 
 Proyecto de gráficos por computadora en Rust: pilota un carguero original de disco, explora cinco planetas y cruza sus portales para jugar desafíos diferentes. **The Inkwell Garden** es un jardín de caricatura antigua inspirado en Cuphead; **Neon Dojo** es un patio urbano de lucha inspirado en Street Fighter, con personajes originales. **Banana Rush** es una carrera de tres carriles inspirada en Subway Surfers y Minion Rush, con skin de minion modelada en 3D. **Mushroom Kingdom** recrea en 2.5D el estilo de Super Mario Bros y un recorrido inspirado en el mundo 1-1, con Mario modelado mediante geometría propia. **Sonic Grand Prix** añade carreras con Sonic, Tails y Knuckles seleccionables, modelos OBJ animados, anillos y un loop de 360°. Cada minijuego sucede dentro de su propio mundo. Consulta `RACE.md` para entrar al quinto mundo y sus controles.
+
+## Opcionales añadidos en v0.9
+
+Distribución de vegetación y detalles con **Perlin 3D y semilla**, **normal mapping CPU/GPU** y **gravedad planetaria sobre la nave**. Los OBJ y los cinco minijuegos se conservan. [OPCIONALES.md](OPCIONALES.md) contiene la explicación, pruebas y comparaciones reproducibles.
+
+- **F6 / cruceta derecha:** alternar normal mapping; F1 muestra su estado.
+- **G / cruceta izquierda:** alternar gravedad en vuelo libre; HUD muestra aceleración. Al soltar el control hay inercia; Ctrl/K o L2 frena.
+- La asistencia orbital de Tab mantiene el radio elegido y muestra AUTO. Para comprobar la gravedad, utilizar vuelo libre.
+- Semilla entregada: 2026. `python3 tools/build_planets.py --seed 42 --only garden --output-dir output/seed-42` genera una variante separada para comparar.
+
+Validación v0.9: **54 pruebas Rust + 3 Python**, Clippy sin advertencias, capturas CPU y GPU comparadas. El video académico CPU se actualizó con los modelos y efectos nuevos. Los videos HD anteriores se conservan como demostración de los minijuegos.
 
 ## Green Hill Edition
 
