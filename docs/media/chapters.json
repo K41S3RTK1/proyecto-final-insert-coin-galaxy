@@ -1,0 +1,75 @@
+{
+  "seconds": 116.0,
+  "chapters": [
+    {
+      "start": 0.0,
+      "duration": 4,
+      "title": "Un universo para jugar.",
+      "source_image": "output/normal-map-gpu-on.png"
+    },
+    {
+      "start": 4.0,
+      "duration": 6,
+      "title": "Cinco destinos. Una galaxia.",
+      "source_start": 0
+    },
+    {
+      "start": 10.0,
+      "duration": 12,
+      "title": "Toma el control de la nave.",
+      "source_start": 8
+    },
+    {
+      "start": 22.0,
+      "duration": 8,
+      "title": "Mundos con identidad propia.",
+      "source_start": 31
+    },
+    {
+      "start": 30.0,
+      "duration": 9,
+      "title": "The Inkwell Garden",
+      "source_start": 47
+    },
+    {
+      "start": 39.0,
+      "duration": 9,
+      "title": "Neon Dojo",
+      "source_start": 71
+    },
+    {
+      "start": 48.0,
+      "duration": 10,
+      "title": "Banana Rush",
+      "source_start": 89
+    },
+    {
+      "start": 58.0,
+      "duration": 12,
+      "title": "Mushroom Kingdom",
+      "source_start": 108
+    },
+    {
+      "start": 70.0,
+      "duration": 3,
+      "title": "Sonic Grand Prix",
+      "source_start": 136
+    },
+    {
+      "start": 73.0,
+      "duration": 32,
+      "title": "Velocidad sin perder el control.",
+      "source_start": 142
+    },
+    {
+      "start": 105.0,
+      "duration": 6,
+      "title": "Normal mapping / comparación"
+    },
+    {
+      "start": 111.0,
+      "duration": 5,
+      "title": "Daniel Sandoval / entrega"
+    }
+  ]
+}

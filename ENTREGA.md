@@ -27,6 +27,7 @@ Los modelos de Sonic, Tails, Knuckles, Mario y Minion son recreaciones del proye
 - Recursos: assets/, incluidos todos los OBJ/MTL, audio y fuente tipográfica.
 - Generadores reproducibles: tools/build_ship.py, build_planets.py, build_racers.py, asset_mesh.py, noise3d.py y build_normal_map.py.
 - Video principal para la consigna: output/Proyecto_Final_CPU.mp4, 30 segundos, rasterización CPU, vuelo continuo con una vuelta completa. Controles automatizados identificados en pantalla; progreso aislado, sin editar partidas guardadas.
+- Presentación visual editada: output/Presentacion_Galaxy.mp4, 1:56, cinco mundos, comparación de normal mapping y créditos.
 - Videos adicionales HD: output/Proyecto_Final_Green_Hill_Galaxy.mp4 y output/Sonic_Grand_Prix.mp4.
 - Solicitud de evaluación y límites: RUBRICA.md. Controles: README.md y RACE.md.
 - No se incluyen partidas personales, cachés de compilación, credenciales ni grabaciones intermedias.
